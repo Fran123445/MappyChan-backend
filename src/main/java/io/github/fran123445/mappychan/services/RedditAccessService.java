@@ -52,19 +52,11 @@ public class RedditAccessService {
     }
 
     public String getSubredditJson(String subredditName) {
-        String json;
+        return getJson(baseUrl + subredditName + "/hot/?limit=10" );
+    }
 
-        try {
-            HttpRequest request = buildApiRequest(baseUrl + subredditName + "/hot/?limit=10" );
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            json = response.body();
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return json;
+    public String getPostJson(String subredditName, String postId) {
+        return getJson(baseUrl + subredditName + "/comments/" + postId + "/?sort=top&depth=0&limit=10");
     }
 
     private String acquireToken() throws URISyntaxException, InterruptedException, IOException {
@@ -93,11 +85,23 @@ public class RedditAccessService {
         return json.get("access_token").asText();
     }
 
-    private HttpRequest buildApiRequest(String url) throws URISyntaxException {
-        return HttpRequest.newBuilder()
-                .header("Authorization", "Bearer " + token)
-                .header("User-Agent", userAgent)
-                .uri(new URI(url))
-                .build();
+    private String getJson(String url) {
+        String json;
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .header("Authorization", "Bearer " + token)
+                    .header("User-Agent", userAgent)
+                    .uri(new URI(url))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            json = response.body();
+        } catch (URISyntaxException | InterruptedException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return json;
     }
 }
