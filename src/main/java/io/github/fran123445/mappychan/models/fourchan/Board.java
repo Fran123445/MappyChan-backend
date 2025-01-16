@@ -8,4 +8,8 @@ public class Board {
         this.name = name;
         this.title = title;
     }
+
+    public String getName() {
+        return name;
+    }
 }

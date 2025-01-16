@@ -21,7 +21,23 @@ public class Post {
         this.comments = comments;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public String getId() {
         return id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 }

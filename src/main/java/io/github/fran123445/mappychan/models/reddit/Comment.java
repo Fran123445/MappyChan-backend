@@ -8,4 +8,12 @@ public class Comment {
         this.body = body;
         this.upvotes = upvotes;
     }
+
+    public String getBody() {
+        return body;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
 }
