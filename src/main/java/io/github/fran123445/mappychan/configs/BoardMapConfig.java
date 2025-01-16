@@ -14,11 +14,11 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
-public class BoardListConfig {
+public class BoardMapConfig {
 
     @Autowired
     HttpClient httpClient;
@@ -30,7 +30,7 @@ public class BoardListConfig {
     String boardsEndpointURL;
 
     @Bean
-    public List<Board> boardList() throws IOException, InterruptedException, URISyntaxException {
+    public Map<String, Board> boardMap() throws IOException, InterruptedException, URISyntaxException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(boardsEndpointURL))
                 .build();
@@ -39,17 +39,17 @@ public class BoardListConfig {
 
         JsonNode boardsNode = objectMapper.readTree(response.body()).get("boards");
 
-        List<Board> boardList = new ArrayList<>();
+        Map<String, Board> boardMap = new HashMap<>();
 
         for (JsonNode boardNode : boardsNode) {
             String boardName = boardNode.get("board").asText();
             String boardTitle = boardNode.get("title").asText();
 
             Board board = new Board(boardName, boardTitle);
-            boardList.add(board);
+            boardMap.put(boardName, board);
         }
 
-        return boardList;
+        return boardMap;
     }
 
 }
